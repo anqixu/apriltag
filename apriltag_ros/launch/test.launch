@@ -1,8 +1,16 @@
 <launch>
+    <arg name="device" default="1"/>
+    <arg name="image_topic" default="/camera/image_raw"/>
 
-    <include file="$(find apriltag_ros)/launch/camera.launch" />
-    <include file="$(find apriltag_ros)/launch/apriltag.launch" >
-        <arg name="image_topic" value="/camera/image_raw" />
+    <!--<include file="$(find usb_camera)/launch/node.launch">-->
+        <!--<param name="device" type="int" value="$(arg device)"/>-->
+    <!--</include>-->
+
+    <include file="$(find bluefox2)/launch/mono.launch">
+    </include>
+
+    <include file="$(find apriltag_ros)/launch/node.launch" >
+        <arg name="image_topic" value="$(arg image_topic)" />
     </include>
 
 </launch>

@@ -60,16 +60,13 @@ void PoseEstimator::CameraCallback(const ImageConstPtr &image,
       cv::putText(image_color, ss.str(), Point2(c2.x - 5, c2.y + 5),
                   CV_FONT_HERSHEY_PLAIN, 2, cv::Scalar(0, 255, 255), 2);
     }
-    // Undistort points
-    cv::Mat pi_undistort;
-    cv::undistortPoints(cv::Mat(pi), pi_undistort, caminfo_.K, caminfo_.D);
     // Calculate pose
     static cv::Mat r = cv::Mat::zeros(cv::Size(1, 3), CV_64F);
     static cv::Mat cTw = cv::Mat::zeros(cv::Size(1, 3), CV_64F);
     cv::Mat wTc(cv::Size(3, 3), CV_64F);
     cv::Mat cRw(cv::Size(3, 3), CV_64F);
     cv::Mat wRc(cv::Size(3, 3), CV_64F);
-    cv::solvePnP(pw, pi_undistort, caminfo_.K, caminfo_.D, r, cTw, true);
+    cv::solvePnP(pw, pi, caminfo_.K, caminfo_.D, r, cTw, true);
     cv::Rodrigues(r, cRw);
     wRc = cRw.inv();
     wTc = -wRc * cTw;

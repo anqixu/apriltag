@@ -33,6 +33,7 @@ extern "C" {
 #endif
 
 #include "tag_yaml.hpp"
+#include <fstream>
 
 typedef cv::Point2d Point2;
 typedef cv::Point3d Point3;
@@ -145,6 +146,10 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
   if (detections.size()) {
     std::vector<Point2> pi; // Points in image
     std::vector<Point3> pw; // Points in world
+    
+    std::ostringstream ids;
+    ids << "[";
+    
     for (auto it = detections.begin(); it != detections.end(); it++) {
       const int id = it->id;
       const Point2 c2 = Point2(it->cxy.first, it->cxy.second);
@@ -161,6 +166,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
       // Display tag id
       std::ostringstream ss;
       ss << id;
+      ids << id << ", ";
       auto color = cv::Scalar(0, 255, 255);
       if (tagsWorld.find(id) != tagsWorld.end()) {
         color = cv::Scalar(255,255,0);
@@ -168,6 +174,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
       cv::putText(image_rgb, ss.str(), Point2(c2.x - 5, c2.y + 5),
                   cv::FONT_HERSHEY_PLAIN, 2, color, 2);
     }
+    ids << "]";
 
     // Get pose
     static cv::Mat r = cv::Mat::zeros(cv::Size(1, 3), CV_64F);
@@ -184,7 +191,7 @@ void cam_callback(const sensor_msgs::ImageConstPtr &image,
     // Publish
     geometry_msgs::PoseStamped pose_cam;
     pose_cam.header.stamp = image->header.stamp;
-    pose_cam.header.frame_id = "0";
+    pose_cam.header.frame_id = ids.str();
 
     double *pt = wTc.ptr<double>();
     pose_cam.pose.position.x = pt[0];
@@ -227,14 +234,14 @@ int main(int argc, char **argv) {
   nh.getParam("map_file", yamlPath);
 
   try {
-    YAML::Node mapNode = YAML::LoadFile(yamlPath);
-
-    if (!mapNode.IsSequence()) {
-      throw std::runtime_error("YAML file should be a sequence of tags");
-    }
+    std::ifstream fin(yamlPath);
+    YAML::Parser parser(fin);
+    YAML::Node mapNode;
+    parser.GetNextDocument(mapNode);
 
     for (size_t i=0; i < mapNode.size(); i++) {
-      apriltag_ros::Tag tag = mapNode[i].as<apriltag_ros::Tag>();
+      apriltag_ros::Tag tag;
+      mapNode[i] >> tag;
       tagsWorld[tag.id] = tag;  //  add to map
     }
 

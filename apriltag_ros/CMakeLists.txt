@@ -12,7 +12,7 @@ generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package()
 
-add_definitions("-std=c++11 -Wall")
+add_definitions("-std=c++0x -Wall")
 
 include_directories(${catkin_INCLUDE_DIRS})
 include_directories(${OpenCV_INCLUDE_DIRS})

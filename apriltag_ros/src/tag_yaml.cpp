@@ -3,43 +3,21 @@
 
 #include "tag_yaml.hpp"
 
-YAML::Node YAML::convert<apriltag_ros::Tag>::encode(const apriltag_ros::Tag &rhs) {
-  YAML::Node node;
-  node["id"] = rhs.id;
-  
-  //  convert to vector of coordinates
-  for (int i=0; i < 4; i++) {
-    YAML::Node pointNode;
-    pointNode["x"] = rhs.p[i].x;
-    pointNode["y"] = rhs.p[i].y;
-    pointNode["z"] = rhs.p[i].z;
-    
-    node["corners"].push_back(pointNode);
-  }
-  return node;
-}
 
-bool YAML::convert<apriltag_ros::Tag>::decode(const YAML::Node &node, apriltag_ros::Tag &rhs) {
-
-  if (!node.IsMap()) { 
-    return false;
-  }
+void operator >> (const YAML::Node &node, apriltag_ros::Tag &rhs) {
   
-  rhs.id = node["id"].as<int>();
+  node["id"] >> rhs.id;
   
-  YAML::Node pointSeq = node["corners"];
-  if (!pointSeq.IsSequence()) {
-    return false;
-  }
+  const YAML::Node& pointSeq = node["corners"];
   
   //  this will trigger an exception if any points are invalid...
   for (int i=0; i < 4; i++) {
-    rhs.p[i].x = pointSeq[i]["x"].as<double>();
-    rhs.p[i].y = pointSeq[i]["y"].as<double>();
-    rhs.p[i].z = pointSeq[i]["z"].as<double>();
+    pointSeq[i]["x"] >> rhs.p[i].x;
+    pointSeq[i]["y"] >> rhs.p[i].y;
+    pointSeq[i]["z"] >> rhs.p[i].z;
   }
   
-  return true;
+  return;
 }
 
 YAML::Emitter& operator << (YAML::Emitter& out, const apriltag_ros::Tag& tag) {  

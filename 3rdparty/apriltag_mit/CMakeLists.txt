@@ -3,14 +3,14 @@ project(apriltag_mit)
 
 set(USE_ROS TRUE)
 
-set(CMAKE_CXX_FLAGS "-Wall -std=c++11 -fPIC")
+set(CMAKE_CXX_FLAGS "-Wall -std=c++0x -fPIC")
 set(CMAKE_BUILD_TYPE Release)
 
-find_package(Eigen3 REQUIRED)
+find_package(eigen REQUIRED)
 find_package(OpenCV REQUIRED)
 
 include_directories(include)
-include_directories(${OpenCV_INCLUDE_DIRS} ${Eigen3_INCLUDE_DIRS})
+include_directories(${OpenCV_INCLUDE_DIRS} ${EIGEN_INCLUDE_DIR})
 
 if(USE_ROS)
     find_package(catkin REQUIRED COMPONENTS roscpp)

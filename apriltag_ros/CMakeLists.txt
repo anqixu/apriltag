@@ -10,7 +10,9 @@ find_package(OpenCV)
 add_message_files(DIRECTORY msg)
 generate_messages(DEPENDENCIES std_msgs)
 
-catkin_package()
+catkin_package(
+CATKIN_DEPENDS roscpp image_transport cv_bridge camera_info_manager std_msgs sensor_msgs geometry_msgs message_runtime apriltag_mit apriltag_umich
+)
 
 add_definitions("-std=c++0x -Wall")
 

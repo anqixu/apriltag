@@ -6,7 +6,8 @@ set(USE_ROS TRUE)
 set(CMAKE_CXX_FLAGS "-Wall -std=c++0x -fPIC")
 set(CMAKE_BUILD_TYPE Release)
 
-find_package(eigen REQUIRED)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/cmake_modules/)
+find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 
 include_directories(include)

@@ -10,8 +10,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/c
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 
-include_directories(include)
-include_directories(${OpenCV_INCLUDE_DIRS} ${EIGEN_INCLUDE_DIR})
+include_directories(include ${OpenCV_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR})
 
 if(USE_ROS)
     find_package(catkin REQUIRED COMPONENTS roscpp)
@@ -33,7 +32,6 @@ file(GLOB CC_FILES ${PROJECT_SOURCE_DIR}/src/*.cc)
 add_library(${PROJECT_NAME} SHARED ${CC_FILES})
 target_link_libraries(${PROJECT_NAME}
     ${OpenCV_LIBRARIES}
-    ${Eigen3_LIBRARIES}
     )
 
 add_executable(test_apriltag_mit src/test/test_apriltag_mit.cpp)

@@ -15,8 +15,25 @@ struct Tag {
 };
 } // namespace apriltag_ros
 
+#ifdef USE_OLD_YAML_INTERFACE
+
 //  Encoding/decoding functionality
 void operator >> (const YAML::Node& node, apriltag_ros::Tag& tag);
 YAML::Emitter& operator << (YAML::Emitter& out, const apriltag_ros::Tag& tag);
+
+#else
+
+//  Encoding/decoding functionality
+namespace YAML {
+
+template <> struct convert<apriltag_ros::Tag> {
+  static Node encode(const apriltag_ros::Tag &rhs);
+  static bool decode(const Node &node, apriltag_ros::Tag &rhs);
+};
+} // namespace YAML
+
+YAML::Emitter& operator << (YAML::Emitter& out, const apriltag_ros::Tag& tag);
+
+#endif
 
 #endif // TAG_YAML_HPP

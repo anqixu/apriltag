@@ -234,6 +234,7 @@ int main(int argc, char **argv) {
   nh.getParam("map_file", yamlPath);
 
   try {
+#ifdef USE_OLD_YAML_INTERFACE
     std::ifstream fin(yamlPath);
     YAML::Parser parser(fin);
     YAML::Node mapNode;
@@ -244,6 +245,20 @@ int main(int argc, char **argv) {
       mapNode[i] >> tag;
       tagsWorld[tag.id] = tag;  //  add to map
     }
+    
+#else
+
+    YAML::Node mapNode = YAML::LoadFile(yamlPath);
+    if (!mapNode.IsSequence()) {
+      throw std::runtime_error("YAML file should be a sequence of tags");
+    }
+    
+    for (size_t i=0; i < mapNode.size(); i++) {
+      apriltag_ros::Tag tag = mapNode[i].as<apriltag_ros::Tag>();
+      tagsWorld[tag.id] = tag; // add to map
+    }
+    
+#endif
 
     if (tagsWorld.empty()) {
       throw std::runtime_error("No tags were loaded");

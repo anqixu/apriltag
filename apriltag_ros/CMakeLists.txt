@@ -15,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
     apriltag_mit apriltag_umich)
 find_package(OpenCV)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/../3rdparty/apriltag_mit/cmake_modules/)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/../3rdparty/apriltag_mit/cmake_modules/)
 find_package(Eigen3 REQUIRED)
 
 add_message_files(DIRECTORY msg)

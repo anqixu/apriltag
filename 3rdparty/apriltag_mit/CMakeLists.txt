@@ -6,7 +6,8 @@ set(USE_ROS TRUE)
 set(CMAKE_CXX_FLAGS "-Wall -std=c++0x -fPIC")
 set(CMAKE_BUILD_TYPE Release)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/cmake_modules/)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR}/cmake_modules/)
+message(STATUS "Blarg: ${CMAKE_MODULE_PATH}")
 find_package(Eigen3 REQUIRED)
 find_package(OpenCV REQUIRED)
 
